@@ -1,8 +1,14 @@
 import 'package:flutter/foundation.dart';
 
+/// Type de fonction pour la navigation
+typedef FonctionNavigation = void Function(String route);
+
 /// Classe abstraite de base pour tous les contrôleurs de l'application
 /// Implémente le pattern MVC en gérant les interactions entre modèles et vues
 abstract class ControleurBase extends ChangeNotifier {
+  /// Fonction de navigation injectée depuis la vue
+  FonctionNavigation? _fonctionNavigation;
+
   /// Indique si le contrôleur est en cours de chargement
   bool _estEnChargement = false;
 
@@ -44,6 +50,17 @@ abstract class ControleurBase extends ChangeNotifier {
     if (!isDisposed) {
       notifyListeners();
     }
+  }
+
+  /// Configure la fonction de navigation
+  void configurerNavigation(FonctionNavigation fonction) {
+    _fonctionNavigation = fonction;
+  }
+
+  /// Navigue vers une route spécifiée
+  @protected
+  void naviguerVers(String route) {
+    _fonctionNavigation?.call(route);
   }
 
   /// Méthode d'initialisation du contrôleur

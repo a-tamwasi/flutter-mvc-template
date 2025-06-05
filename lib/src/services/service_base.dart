@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// Classe abstraite de base pour tous les services de l'application
 /// Définit l'interface commune et les fonctionnalités partagées
 abstract class ServiceBase {
@@ -33,7 +35,7 @@ abstract class ServiceBase {
   /// Vérifie que le service est initialisé avant utilisation
   void verifierInitialisation() {
     if (!_estInitialise) {
-      throw StateError('Le service ${runtimeType} doit être initialisé avant utilisation');
+      throw StateError('Le service $runtimeType doit être initialisé avant utilisation');
     }
   }
 
@@ -42,7 +44,11 @@ abstract class ServiceBase {
     final messageErreur = 'Erreur dans $runtimeType - $contexte: $erreur';
     
     // Log de l'erreur (à remplacer par un vrai système de logging)
-    print(messageErreur);
+    // Utilisation temporaire de print en debug uniquement
+    assert(() {
+      debugPrint(messageErreur);
+      return true;
+    }());
     
     if (erreur is Exception) {
       return erreur;

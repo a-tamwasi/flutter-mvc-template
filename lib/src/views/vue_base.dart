@@ -8,9 +8,9 @@ abstract class VueBase<T extends ControleurBase> extends StatefulWidget {
   final T controleur;
 
   const VueBase({
-    Key? key,
+    super.key,
     required this.controleur,
-  }) : super(key: key);
+  });
 
   @override
   State<VueBase<T>> createState() => _VueBaseState<T>();
@@ -21,6 +21,11 @@ abstract class VueBase<T extends ControleurBase> extends StatefulWidget {
 
   /// Construit l'AppBar de la vue (optionnel)
   PreferredSizeWidget? construireBarreApplication(BuildContext context, T controleur) {
+    return null;
+  }
+
+  /// Construit le drawer de la vue (optionnel)
+  Widget? construireDrawer(BuildContext context, T controleur) {
     return null;
   }
 
@@ -43,6 +48,13 @@ class _VueBaseState<T extends ControleurBase> extends State<VueBase<T>> {
     
     // Écoute les changements du contrôleur
     widget.controleur.addListener(_surChangementControleur);
+    
+    // Configure la navigation du contrôleur
+    widget.controleur.configurerNavigation((String route) {
+      if (mounted) {
+        Navigator.of(context).pushNamed(route);
+      }
+    });
     
     // Initialise le contrôleur si nécessaire
     widget.controleur.initialiser();
@@ -73,6 +85,7 @@ class _VueBaseState<T extends ControleurBase> extends State<VueBase<T>> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: widget.construireBarreApplication(context, widget.controleur),
+      drawer: widget.construireDrawer(context, widget.controleur),
       body: widget.construireContenu(context, widget.controleur),
     );
   }

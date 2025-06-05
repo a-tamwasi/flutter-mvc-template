@@ -3,8 +3,8 @@ import '../constants/couleurs_application.dart';
 import '../constants/dimensions_application.dart';
 import '../constants/styles_texte.dart';
 
-/// Widget de bouton personnalisé réutilisable
-/// Respecte les conventions visuelles de l'application
+/// Widget de bouton personnalisé réutilisable avec design élégant
+/// Respecte la nouvelle palette de couleurs premium de l'application
 class BoutonPersonnalise extends StatelessWidget {
   /// Texte affiché sur le bouton
   final String texte;
@@ -28,7 +28,7 @@ class BoutonPersonnalise extends StatelessWidget {
   final IconData? icone;
 
   const BoutonPersonnalise({
-    Key? key,
+    super.key,
     required this.texte,
     this.surTap,
     this.type = TypeBouton.primaire,
@@ -36,7 +36,7 @@ class BoutonPersonnalise extends StatelessWidget {
     this.estEnChargement = false,
     this.estActive = true,
     this.icone,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +51,13 @@ class BoutonPersonnalise extends StatelessWidget {
         onPressed: (estActive && !estEnChargement) ? surTap : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: couleurBouton,
+          foregroundColor: couleurTexte,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(DimensionsApplication.rayonMoyen),
+            side: _obtenirBordure(),
           ),
-          elevation: type == TypeBouton.primaire ? DimensionsApplication.hauteurElevation : 0,
+          elevation: _obtenirElevation(),
+          shadowColor: couleurBouton.withValues(alpha: 0.3),
         ),
         child: estEnChargement
             ? SizedBox(
@@ -83,9 +86,11 @@ class BoutonPersonnalise extends StatelessWidget {
   Color _obtenirCouleurBouton() {
     switch (type) {
       case TypeBouton.primaire:
-        return CouleursApplication.primaire;
+        return CouleursApplication.vertProfondChic;
       case TypeBouton.secondaire:
-        return CouleursApplication.secondaire;
+        return CouleursApplication.vertOlive;
+      case TypeBouton.accent:
+        return CouleursApplication.orElegant;
       case TypeBouton.succes:
         return CouleursApplication.succes;
       case TypeBouton.erreur:
@@ -99,9 +104,41 @@ class BoutonPersonnalise extends StatelessWidget {
   Color _obtenirCouleurTexte() {
     switch (type) {
       case TypeBouton.transparent:
-        return CouleursApplication.primaire;
+        return CouleursApplication.orElegant;
+      case TypeBouton.accent:
+        return CouleursApplication.vertProfondChic;
       default:
         return CouleursApplication.texteSurSombre;
+    }
+  }
+
+  /// Obtient la bordure selon le type de bouton
+  BorderSide _obtenirBordure() {
+    switch (type) {
+      case TypeBouton.transparent:
+        return const BorderSide(
+          color: CouleursApplication.orElegant,
+          width: 2,
+        );
+      case TypeBouton.accent:
+        return const BorderSide(
+          color: CouleursApplication.bordureAccent,
+          width: 1,
+        );
+      default:
+        return BorderSide.none;
+    }
+  }
+
+  /// Obtient l'élévation selon le type de bouton
+  double _obtenirElevation() {
+    switch (type) {
+      case TypeBouton.transparent:
+        return 0;
+      case TypeBouton.accent:
+        return DimensionsApplication.hauteurElevation * 2;
+      default:
+        return DimensionsApplication.hauteurElevation;
     }
   }
 
@@ -124,17 +161,31 @@ class BoutonPersonnalise extends StatelessWidget {
         return StylesTexte.libelle;
       case TailleBouton.moyenne:
       case TailleBouton.grande:
-        return StylesTexte.bouton;
+        return type == TypeBouton.accent 
+            ? StylesTexte.boutonAccent 
+            : StylesTexte.bouton;
     }
   }
 }
 
-/// Types de boutons disponibles
+/// Types de boutons disponibles avec la nouvelle palette
 enum TypeBouton {
+  /// Bouton principal - Vert profond chic
   primaire,
+  
+  /// Bouton secondaire - Vert olive
   secondaire,
+  
+  /// Bouton accent - Or élégant
+  accent,
+  
+  /// Bouton de succès - Vert naturel
   succes,
+  
+  /// Bouton d'erreur - Rouge terre
   erreur,
+  
+  /// Bouton transparent avec bordure dorée
   transparent,
 }
 
