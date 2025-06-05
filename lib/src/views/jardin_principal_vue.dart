@@ -51,6 +51,7 @@ class JardinPrincipalVue extends VueBase<JardinPrincipalControleur> {
     return Drawer(
       backgroundColor: CouleursApplication.vertProfondChic,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // En-tête du drawer
           _construireEnTeteDrawer(context, controleur),
@@ -80,51 +81,52 @@ class JardinPrincipalVue extends VueBase<JardinPrincipalControleur> {
   /// Construit l'en-tête du drawer avec le nouveau design élégant
   Widget _construireEnTeteDrawer(BuildContext context, JardinPrincipalControleur controleur) {
     return DrawerHeader(
+      margin: EdgeInsets.zero,
+      padding: const EdgeInsets.only(
+        top: DimensionsApplication.espacementPetit,
+        left: DimensionsApplication.espacementMoyen,
+        right: DimensionsApplication.espacementMoyen,
+        bottom: DimensionsApplication.espacementTresPetit,
+      ),
       decoration: const BoxDecoration(
         gradient: CouleursApplication.degradePrincipal,
+        // Ligne de séparation élégante en or
+        border: Border(
+          bottom: BorderSide(
+            color: CouleursApplication.orElegant,
+            width: 2.0,
+          ),
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Icône principale avec accent doré
-          Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              color: CouleursApplication.orElegant.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(DimensionsApplication.rayonGrand),
-              border: Border.all(
-                color: CouleursApplication.orElegant,
-                width: 2,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Logo de l'entreprise avec positionnement optimisé
+            Expanded(
+              child: Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(DimensionsApplication.rayonMoyen),
+                  child: Image.asset(
+                    'assets/logo1.png',
+                    width: 180,
+                    height: 180,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      // Fallback en cas d'erreur de chargement
+                      return const Icon(
+                        Icons.eco,
+                        size: DimensionsApplication.iconeTresGrande,
+                        color: CouleursApplication.vertProfondChic,
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
-            child: const Icon(
-              Icons.eco,
-              size: DimensionsApplication.iconeTresGrande,
-              color: CouleursApplication.orElegant,
-            ),
-          ),
-          
-          const SizedBox(height: DimensionsApplication.espacementMoyen),
-          
-          // Titre principal
-          Text(
-            'Mon Jardin Idéal',
-            style: StylesTexte.titrePrincipalDore.copyWith(
-              color: CouleursApplication.texteSurSombre,
-              fontSize: 22.0,
-            ),
-          ),
-          
-          // Sous-titre élégant
-          Text(
-            'Cultivez votre passion',
-            style: StylesTexte.corpsTexteSecondaire.copyWith(
-              color: CouleursApplication.orElegant.withValues(alpha: 0.9),
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
